@@ -54,7 +54,27 @@ def create():
         print("Please fill all fields")
 
 def search():
-    print("Search functionality coming soon.")
+    name = name_entry.get()
+    email=email_entry.get()
+
+    for row in tree.get_children():
+        tree.delete(row)
+    try:
+        searching = CRUD()
+        users   = searching.search(name,email)
+        print("USERS HAVE BEEN SEARCHED")
+        if users:
+            print("inside first if")
+            for user in users:
+                print("isndie for")
+                tree.insert("",tk.END,values=user)
+                # tree.insert("",tk.END,values=(user,))
+        else:
+            print("No user fund")
+    except Exception as e:
+        print("ERROR")
+
+
 
 def update():
     print("Update functionality coming soon.")

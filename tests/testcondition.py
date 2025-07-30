@@ -1,15 +1,36 @@
-# import pytest
+import pytest
 import os
 import sys
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 sys.path.append(project_root)
+from EmployeeDatabase import CRUD
+from Tables.tableslist import Base, Employee
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-from EmployeeDatabase.employee import CRUD
-from EmployeeDatabase.departments import DepartmentCRUD
-from Tables.tableslist import Employee, Department
-from Tables.tableslist import Base
-import pytest
-# Creating Rows
+# Setup a temporary SQLite in-memory DB for testing
+@pytest.fixture(scope="module")
+def test_session():
+    engine = create_engine("sqlite:///:memory:")
+    Base.metadata.create_all(engine)
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    yield session
+    # session=Session()
+    session.close()
 
-# user2 = CRUD(name="Akhtar",email="Aktharamin@gmail.com",department_id=5)
-# user2.create()
+def test_create_employee(test_session):
+    # Create a CRUD instance using the test session (modify your CRUD to accept session)
+    crud = CRUD(Session=test_session)
+
+    # Create a test user
+    crud.name = "Test User"
+    crud.email = "test@example.com"
+    crud.department_id = 1
+    crud.create()
+
+    # Query back
+    employee = test_session.query(Employee).filter_by(name="Test User").first()
+    assert employee is not None
+    assert employee.email == "test@example.com"
+

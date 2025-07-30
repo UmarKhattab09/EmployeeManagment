@@ -13,7 +13,7 @@ class DepartmentCRUD:
         self.Session = sessionmaker(bind=self.engine)
     
     def createdepartment(self):
-        session = self.Session()
+        session = self.Session
         if self.name is None and self.department_id is None:
             print("CAN NOT ADD USER")
         result = session.execute(
