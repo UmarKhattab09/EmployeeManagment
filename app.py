@@ -1,53 +1,110 @@
 import tkinter as tk
-from main import Employee,CRUD
+from tkinter import ttk
+from Tables.tableslist import Employee, Department
+from EmployeeDatabase import DepartmentCRUD
+from EmployeeDatabase import CRUD
+import mysql.connector
+
+
+def fetch_data():
+    for row in tree.get_children():
+        tree.delete(row)
+
+    try:
+        connection = mysql.connector.connect(
+            host="127.0.0.1",
+            user="root",
+            password="root",
+            database="employee_managment"
+        )
+        cursor = connection.cursor()
+        cursor.execute("SELECT * FROM employees")  # change to your table
+        rows = cursor.fetchall()
+
+        for row in rows:
+            tree.insert("", tk.END, values=row)
+
+        cursor.close()
+        connection.close()
+    except Exception as e:
+        print("Error fetching data:", e)
+
+
+
+
+
+
+
 
 
 def create():
     name = name_entry.get()
     email = email_entry.get()
-    # session = Session()
-    creating = CRUD(name,email)
-    user = creating.create
+    dept = dept_entry.get()
 
+    if name and email and dept:
+        try:
+            creating = CRUD(name, email, dept)
+            creating.create()  # Actually call the method
+            print(f"User '{name}' created.")
+            fetch_data()  # Refresh table after creating
+        except Exception as e:
+            print("Error creating user:", e)
+    else:
+        print("Please fill all fields")
 
 def search():
-    pass
+    print("Search functionality coming soon.")
 
 def update():
-    pass
+    print("Update functionality coming soon.")
 
 def delete():
-    pass
-
-
-    
-    
+    print("Delete functionality coming soon.")
 
 root = tk.Tk()
-root.geometry("400x200")
+root.geometry("800x600")
+root.title("Employee Management System")
 
-# Name Label and Entry
-name_label = tk.Label(root, text="Name:")
-name_label.place(x=50, y=30)
+# Top Frame for Table
+table_frame = tk.Frame(root)
+table_frame.pack(fill=tk.BOTH, expand=True)
 
-name_entry = tk.Entry(root, width=30)
-name_entry.place(x=50, y=55)
+columns = ("ID", "Name", "Email", "Department_ID")
+tree = ttk.Treeview(table_frame, columns=columns, show="headings")
 
-# Email Label and Entry
-email_label = tk.Label(root, text="Email:")
-email_label.place(x=50, y=90)
+for col in columns:
+    tree.heading(col, text=col)
+    tree.column(col, anchor=tk.CENTER, width=150)
 
-email_entry = tk.Entry(root, width=30)
-email_entry.place(x=50, y=115)
+tree.pack(fill=tk.BOTH, expand=True)
 
-# Button to get data
-submit_button = tk.Button(root, text="Create", command=create)
-submit_button.place(x=50, y=150)
-submit_button = tk.Button(root, text="Search", command=search)
-submit_button.place(x=50, y=200)
-submit_button = tk.Button(root, text="Delete", command=delete)
-submit_button.place(x=50, y=250)
-submit_button = tk.Button(root, text="Update", command=update)
-submit_button.place(x=50, y=300)
+# Load Data Button
+tk.Button(root, text="Load Data", command=fetch_data).pack(pady=10)
+
+# Bottom Frame for Form
+form_frame = tk.Frame(root)
+form_frame.pack(pady=10)
+
+tk.Label(form_frame, text="Name:").grid(row=0, column=0, padx=5)
+name_entry = tk.Entry(form_frame, width=20)
+name_entry.grid(row=0, column=1, padx=5)
+
+tk.Label(form_frame, text="Email:").grid(row=0, column=2, padx=5)
+email_entry = tk.Entry(form_frame, width=20)
+email_entry.grid(row=0, column=3, padx=5)
+
+tk.Label(form_frame, text="Dept ID:").grid(row=0, column=4, padx=5)
+dept_entry = tk.Entry(form_frame, width=10)
+dept_entry.grid(row=0, column=5, padx=5)
+
+# Button Frame
+btn_frame = tk.Frame(root)
+btn_frame.pack(pady=10)
+
+tk.Button(btn_frame, text="Create", command=create).grid(row=0, column=0, padx=10)
+tk.Button(btn_frame, text="Search", command=search).grid(row=0, column=1, padx=10)
+tk.Button(btn_frame, text="Delete", command=delete).grid(row=0, column=2, padx=10)
+tk.Button(btn_frame, text="Update", command=update).grid(row=0, column=3, padx=10)
 
 root.mainloop()
