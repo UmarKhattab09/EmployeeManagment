@@ -1,5 +1,6 @@
 # EmployeeManagment
 - Just trying to create an Employee Manamgment app. using mysql database.
+- Added some more pytest functions
 
 - Will try to complete
 
