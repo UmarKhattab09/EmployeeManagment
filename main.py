@@ -19,7 +19,10 @@ from Tables.tableslist import Base
 
 search=CRUD()
 searchasd=search.search(name="Umar",email="com")
-print(searchasd)
+
+
+print(searchasd[0])
+
 # Upload = User1.create()
 # search = User1.searchbyemail("randomemail@gmailcom")
 # update = User1.update("randomemail3@gmail.com","Umara","khattabaumar",1)

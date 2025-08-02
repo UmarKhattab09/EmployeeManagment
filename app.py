@@ -77,10 +77,33 @@ def search():
 
 
 def update():
-    print("Update functionality coming soon.")
+    name = name_entry.get()
+    email=email_entry.get()
+    department = dept_entry.get()
+    for row in tree.get_children():
+        tree.delete(row)
+
+    
+    print("update functionality is adding")
 
 def delete():
-    print("Delete functionality coming soon.")
+    name = name_entry.get()
+    email=email_entry.get()
+    for row in tree.get_children():
+        tree.delete(row)
+
+    if name and email:
+        try:
+            deleteing = CRUD()
+            deleteing.delete(name=name,email=email)  # Actually call the method
+            # print(f"User '{name}' Deleted.")
+            fetch_data()  # Refresh table after creating
+        except Exception as e:
+            print("Error Deletign User", e)
+    else:
+        print("Please fill all fields")    
+
+    # print("Delete functionality coming soon.")
 
 root = tk.Tk()
 root.geometry("800x600")

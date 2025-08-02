@@ -3,8 +3,14 @@
 
 - Will try to complete
 
+# 3rdUpdates
+- Initalized a delete function
+- Trying to initializing the update function
+
 # 2ndUpdates
 - Initalized a create funciton on the app.
+- Initliazed a search function on the app
+- Implemented CI Pipeline
 
 
 # 1stUpdates

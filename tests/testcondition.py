@@ -20,17 +20,30 @@ def test_session():
     session.close()
 
 def test_create_employee(test_session):
-    # Create a CRUD instance using the test session (modify your CRUD to accept session)
+    # Create a new employee
     crud = CRUD(Session=test_session)
-
-    # Create a test user
     crud.name = "Test User"
     crud.email = "test@example.com"
     crud.department_id = 1
     crud.create()
 
+    # Search for the employee
+    crudsearch = CRUD(Session=test_session)
+    result = crudsearch.search("Test User", "test@example.com")
+    assert result is not None
+    userrelatedstuff = result[0]
+    assert any(user == "Test User" for user in userrelatedstuff)
+
+    # Update the employee
+    crudupdate = CRUD(Session=test_session)
+    crudupdate.update("test@example.com", "TestUserUmar", "Testkhattab@gmail.com")
+
+    # Verify update
+    updated = test_session.query(Employee).filter_by(name="TestUserUmar").first()
+    assert updated is not None
+    assert updated.email == "Testkhattab@gmail.com"
     # Query back
-    employee = test_session.query(Employee).filter_by(name="Test User").first()
-    assert employee is not None
-    assert employee.email == "test@example.com"
+    # employee = test_session.query(Employee).filter_by(name="Test User").first()
+    # assert employee is not None
+    # assert employee.email == "test@example.com"
 

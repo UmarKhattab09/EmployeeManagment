@@ -1,7 +1,7 @@
 
 
 
-from sqlalchemy import create_engine, Column, Integer, String, select, update, or_
+from sqlalchemy import create_engine, Column, Integer, String, select, update, or_ , and_
 from sqlalchemy.orm import declarative_base, sessionmaker
 from Tables.tableslist import Employee
 
@@ -98,3 +98,18 @@ class CRUD:
             print(f"User with  {email} updated sucessfully")
         else:
             print("user not found")
+    
+    def delete(self,email,name):
+        session = self.Session
+        result = session.execute(select(Employee).where(
+            and_(Employee.email==email,Employee.name==name
+                 )
+                 )
+                 )
+        user = result.scalars().first()
+        if user:
+            print("User will be deleted")
+            session.delete(user)
+            session.commit()
+        else:
+            print("User not found")
